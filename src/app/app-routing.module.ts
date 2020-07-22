@@ -11,6 +11,8 @@ import { NopagefoundComponent } from './nopagefound/nopagefound.component';
 import { AuthRoutingModule } from './auth/auth.routing';
 
 const routes: Routes = [
+   /* Esta linea tiene que estar arriba de la '**' */
+
   { path: '', redirectTo: '/dashboard', pathMatch: 'full'},
   { path: '**', component: NopagefoundComponent},
 ];
