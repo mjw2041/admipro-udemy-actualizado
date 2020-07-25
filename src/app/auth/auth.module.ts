@@ -1,8 +1,10 @@
+/* Modulos */
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from '../shared/shared.module';
 
-
+/* Componentes */
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 
@@ -12,13 +14,15 @@ import { RegisterComponent } from './register/register.component';
   declarations: [
     LoginComponent,
     RegisterComponent],
-   exports: [
+
+    exports: [
     LoginComponent,
     RegisterComponent
    ] ,
   imports: [
-    CommonModule
-    /*SharedModule*/
+    CommonModule,
+    RouterModule,
+    FormsModule
   ]
 })
 export class AuthModule { }
