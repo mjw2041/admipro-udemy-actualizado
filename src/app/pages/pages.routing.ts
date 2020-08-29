@@ -1,6 +1,8 @@
 /* Modulos */
 import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
+/* Servicios */
+import { AuthsGuard } from '../guards/auths.guard';
 
 /* Rutas */
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -11,9 +13,12 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
 import { PromesasComponent } from './promesas/promesas.component';
 import { RxjsComponent } from '../components/rxjs/rxjs.component';
 
+
 const routes: Routes = [
   {
-    path: 'dashboard', component: PagesComponent,
+    path: 'dashboard',
+    component: PagesComponent,
+    canActivate: [ AuthsGuard ],
        children: [
           { path: '', component: DashboardComponent, data: {titulo: 'DashBoard'} },
           { path: 'progress', component: ProgressComponent, data: {titulo: 'Progress'}  },
@@ -21,9 +26,7 @@ const routes: Routes = [
           { path: 'account-settings', component: AccountSettingsComponent, data: {titulo: 'Ajustes de Cuenta'}},
           { path: 'promesas', component: PromesasComponent, data: {titulo: 'Promesas'}},
           { path: 'rxjs', component: RxjsComponent, data: {titulo: 'Promesas'}}
-
        ]
-
  },
 ];
 
