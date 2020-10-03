@@ -2,6 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Router, ActivationEnd } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { UsuarioService } from 'src/app/services/usuario.service';
 
 @Component({
   selector: 'app-breadcrumbs',
@@ -13,7 +14,8 @@ export class BreadcrumbsComponent implements OnDestroy {
   public titulo: string;
   public tituloSubs$: Subscription;
 
-  constructor( private router: Router) {
+
+  constructor( private router: Router ) {
 
     this.tituloSubs$ = this.getArgumentosRuta()
      .subscribe( ( { titulo }  )  => {
