@@ -9,6 +9,7 @@ import { tap, map, catchError } from 'rxjs/operators';
 import { RegisterForm } from '../interfaces/register-form-interfaces';
 import { LoginForm } from '../interfaces/auth.interfaces';
 import { Usuario } from 'src/models/usuario.models';
+import { CargarUsuario } from '../interfaces/cargar-usuarios-interfaces';
 
 
 const base_url = environment.base_url;
@@ -61,24 +62,22 @@ export class UsuarioService {
     return this.usuario.uid || ' ';
   }
 
+  get headers() {
+      return {
+        headers: {
+        'x-token': this.token
+      }
+    };
+  }
+
   validarToken(): Observable<boolean> {
-
-
     return this.http.get(`${ base_url }/login/renew`, {
       headers: {
         'x-token': this.token
       }
     }) .pipe(
       map (( resp: any ) => {
-        console.log('Respuesta del Servicio' );
-        console.log(resp);
         const { email, google, nombre, role, img = '', identicador } = resp.usuario;
-        console.log( 'email' +  email );
-        console.log( 'nombre' +  nombre );
-        console.log( 'identificador' +  identicador );
-        console.log( 'identificado' +  resp.usuario.identificador );
-
-        console.log( 'resp.usuario' +  resp.usuario );
         this.usuario = new Usuario ( email, nombre, '', img, google, role, identicador );
         localStorage.setItem('token', resp.token);
         return true;
@@ -103,11 +102,7 @@ export class UsuarioService {
       ...data,
       role: this.usuario.role
     };
-    return this.http.put( `${ base_url }/usuarios/${this.uid}`, data,  {
-      headers: {
-        'x-token': this.token
-      }
-    });
+    return this.http.put( `${ base_url }/usuarios/${this.uid}`, data, this.headers);
   }
 
   login( formData: LoginForm) {
@@ -119,7 +114,7 @@ export class UsuarioService {
                );
   }
 
-  loginGoogle(  token ) {
+  loginGoogle(token ) {
     return this.http.post( `${ base_url }/login/google`, { token } )
                .pipe (
                  tap( (resp: any) => {
@@ -127,4 +122,42 @@ export class UsuarioService {
                  })
                );
   }
+
+  cargarUsuarios( desde: number = 0 ) {
+    /* localhost:3000/api/usuarios?desde=5*/
+    const url = `${ base_url}/usuarios?desde=${ desde }`;
+    return this.http.get<CargarUsuario>( url, this.headers )
+      .pipe (
+        map ( resp => {
+          const usuarios = resp.usuarios.map(
+            user => new Usuario( user.email, user.nombre, '' , user.img, user.google, user.role, user.identicador)
+          );
+          return {
+            totalUsuarios: resp.totalUsuarios,
+            usuarios
+          };
+        })
+      );
+  }
+
+  eliminarUsuario( usuario: Usuario) {
+
+    const url = `${ base_url}/usuarios/${usuario.uid}` ;
+    return this.http.delete( url, this.headers );
+
+  }
+/*
+  guardarUsuario( usuario: Usuario ) {
+    console.log(usuario);
+    console.log(usuario.uid);
+    console.log(this.headers);
+    return this.http.put( `${ base_url }/usuarios/${usuario.uid}`, usuario, this.headers);
+  }
+*/
+  guardarUsuario( usuario: Usuario ) {
+    return this.http.put(`${ base_url }/usuarios/${ usuario.uid }`, usuario, this.headers );
+
+  }
 }
+
+

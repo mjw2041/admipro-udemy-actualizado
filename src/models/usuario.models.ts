@@ -11,21 +11,24 @@ export class Usuario {
     public img?: string,
     public google?: boolean,
     public role?: string,
-    public uid?: string
+    public uid?: string,
+    public identicador?: string
   ) {}
 
   mostrarNombre() {
     console.log(this.nombre);
   }
 
-  get imagenUrl() {
-    if ( this.img.includes( 'https') ) {
-      return this.img;
-    }
-    if ( this.img ) {
-      return `${ base_url}/upload/usuarios/${ this.img}`;
-    } else {
-      return `${ base_url}/upload/usuarios/no-image`;
-    }
+   get imagenUrl() {
+      if ( !this.img ) {
+          return `${ base_url }/upload/usuarios/no-image`;
+      } else if ( this.img.includes('https') ) {
+          return this.img;
+      } else if ( this.img ) {
+          return `${ base_url }/upload/usuarios/${ this.img }`;
+      } else {
+          return `${ base_url }/upload/usuarios/no-image`;
+      }
+
   }
 }
