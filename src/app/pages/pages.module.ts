@@ -11,6 +11,7 @@ import {RouterModule} from '@angular/router';
 /// Modulos Personales
 import { ComponentsModule } from '../components/components.module';
 import { SharedModule } from '../shared/shared.module';
+import { PipesModule } from '../pipes/pipes.module';
 
 /// Componentes
 import { DashboardComponent } from '../pages/dashboard/dashboard.component';
@@ -22,6 +23,9 @@ import { PromesasComponent } from './promesas/promesas.component';
 import { RxjsComponent } from '../components/rxjs/rxjs.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { UsuariosComponent } from './mantenimientos/usuarios/usuarios.component';
+import { HospitalesComponent } from './mantenimientos/hospitales/hospitales.component';
+import { MedicosComponent } from './mantenimientos/medicos/medicos.component';
+import { MedicoComponent } from './mantenimientos/medicos/medico.component';
 
 
 
@@ -37,7 +41,10 @@ import { UsuariosComponent } from './mantenimientos/usuarios/usuarios.component'
     PromesasComponent,
     RxjsComponent,
     PerfilComponent,
-    UsuariosComponent
+    UsuariosComponent,
+    HospitalesComponent,
+    MedicosComponent,
+    MedicoComponent
   ],
   exports: [
     DashboardComponent,
@@ -54,7 +61,8 @@ import { UsuariosComponent } from './mantenimientos/usuarios/usuarios.component'
     ReactiveFormsModule,
     SharedModule,
     RouterModule,
-    ComponentsModule
+    ComponentsModule,
+    PipesModule
 
     /* Forma paracrear las rutas  */
     // AppRoutingModule
