@@ -10,6 +10,7 @@ import { RegisterForm } from '../interfaces/register-form-interfaces';
 import { LoginForm } from '../interfaces/auth.interfaces';
 import { Usuario } from 'src/models/usuario.models';
 import { CargarUsuario } from '../interfaces/cargar-usuarios-interfaces';
+import Swal from 'sweetalert2';
 
 
 const base_url = environment.base_url;
@@ -30,6 +31,14 @@ export class UsuarioService {
         this.googleInit();
   }
 
+  guardarLocalStorage(token: string, menu: any , desde: string ) {
+    localStorage.setItem('token', token);
+    console.log('guardarLocalStorage');
+    console.log('desde ' + desde);
+    console.log(menu);
+    localStorage.setItem('menu', JSON.stringify(menu));
+  }
+
   googleInit() {
      return new Promise ( resolve => {
        console.log('google init');
@@ -45,6 +54,7 @@ export class UsuarioService {
   }
   logout() {
      localStorage.removeItem('token');
+     localStorage.removeItem('menu');
 
      this.auth2.signOut().then( () => {
       this.ngZone.run( () => {
@@ -62,6 +72,10 @@ export class UsuarioService {
     return this.usuario.uid || ' ';
   }
 
+  get role(): 'ADMIN_ROLE' | 'USER_ROLE' {
+    return this.usuario.role;
+  }
+
   get headers() {
       return {
         headers: {
@@ -77,9 +91,14 @@ export class UsuarioService {
       }
     }) .pipe(
       map (( resp: any ) => {
+
         const { email, google, nombre, role, img = '', identicador } = resp.usuario;
         this.usuario = new Usuario ( email, nombre, '', img, google, role, identicador );
+        this.guardarLocalStorage (resp.token, resp.menu, 'validarToken');
+        /*
         localStorage.setItem('token', resp.token);
+        localStorage.setItem('menu', resp.menu);
+        */
         return true;
       }),
       map ( resp => true ),
@@ -92,8 +111,17 @@ export class UsuarioService {
     return this.http.post( `${ base_url }/usuarios`, formData)
     .pipe (
       tap( (resp: any) => {
+        this.guardarLocalStorage (resp.token, resp.menu, 'crearUsuario');
+        /*
         localStorage.setItem('token', resp.token);
+        localStorage.setItem('menu', resp.menu);
+        */
+      })/*,*/
+      /*
+      catchError( err => {
+        Swal(err.error.mensaje, err.error.errors.message, 'error');
       })
+      */
     );
   }
 
@@ -109,7 +137,11 @@ export class UsuarioService {
     return this.http.post( `${ base_url }/login`, formData)
                .pipe (
                  tap( (resp: any) => {
+                  this.guardarLocalStorage (resp.token, resp.menu, 'login');
+                   /*
                    localStorage.setItem('token', resp.token);
+                   localStorage.setItem('menu', resp.menu);
+                   */
                  })
                );
   }
@@ -118,7 +150,11 @@ export class UsuarioService {
     return this.http.post( `${ base_url }/login/google`, { token } )
                .pipe (
                  tap( (resp: any) => {
+                   this.guardarLocalStorage (resp.token, resp.menu, 'loginGoogle');
+                   /*
                    localStorage.setItem('token', resp.token);
+                   localStorage.setItem('menu', resp.menu);
+                   */
                  })
                );
   }
